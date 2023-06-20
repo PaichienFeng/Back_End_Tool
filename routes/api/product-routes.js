@@ -11,7 +11,7 @@ router.get('/products', async(req, res) => {
     
   const allProducts= await Product.findAll({
     include:[{model:Category},{
-      model:Tag, through: ProductTag, as: 'product_tags'
+      model:Tag, through: ProductTag, as: 'tags'
     }]
   });
     res.status(200).json(allProducts);
@@ -28,7 +28,7 @@ router.get('/products/:id', async (req, res) => {
     
     const product= await Product.findByPk(req.params.id, {
       include:[{model:Category},{
-        model:Tag, through: ProductTag, as: 'product_tag'
+        model:Tag, through: ProductTag, as: 'tags'
       }]
     });
       res.status(200).json(product);
@@ -51,7 +51,7 @@ router.post('/products', (req, res) => {
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
-      if (req.body.tagIds.length) {
+      if (req.body.tagIds) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
             product_id: product.id,
@@ -71,7 +71,7 @@ router.post('/products', (req, res) => {
 });
 
 // update product
-router.put('/:id', (req, res) => {
+router.put('/products/:id', (req, res) => {
   // update product data
   Product.update(req.body, {
     where: {
@@ -112,7 +112,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/products/:id', async (req, res) => {
   // delete one product by its `id` value
   try {
     const deletedProduct = await Product.destroy({
