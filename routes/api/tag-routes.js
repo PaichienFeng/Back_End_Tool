@@ -39,9 +39,10 @@ router.post('/tags',async (req, res) => {
   // create a new tag
   try {
     
-    const newTag= await Tag.creat(req.body);
+    const newTag= await Tag.create(req.body);
       res.status(200).json(newTag);
     } catch (err) {
+      console.log(err)
       res.status(500).json(err)
     }
 });
@@ -51,10 +52,13 @@ router.put('/tags/:id', async (req, res) => {
   try {
     
     const updatedTag= await Tag.update(req.body,{
-      where: req.params.id
+      where: {
+        id:req.params.id
+      }
     });
       res.status(200).json(updatedTag);
     } catch (err) {
+      console.log(err)
       res.status(500).json(err)
     }
 });
@@ -64,7 +68,9 @@ router.delete('/tags/:id', async(req, res) => {
   try {
     
     const deletedTag= await Tag.destroy({
-      where: req.params.id
+      where:{
+        id: req.params.id
+      }
     });
       res.status(200).json(deletedTag);
     } catch (err) {
